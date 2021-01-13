@@ -5,7 +5,9 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const projects = require('./Projects/projects')
-const about = require('./About/about')
+const aboutP1 = require('./About/AboutP1/about-p1')
+const aboutP2 = require('./About/AboutP2/about-p2')
+const landing = require('./Landing/landing')
 const app = express()
 
 app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
@@ -15,8 +17,10 @@ app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
 app.use(cors())
 app.use(helmet())
 
-app.use('/' , about)
+app.use('/' , landing)
 app.use('/api/projects', projects)
+app.use('/api/about-p1', aboutP1)
+app.use('/api/about-p2', aboutP2)
 
 app.use(function errorHandler(error, req, res, next) {
   let response
