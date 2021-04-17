@@ -13,7 +13,7 @@ const aboutP2 = require('./About/AboutP2/about-p2')
 const landing = require('./Landing/landing')
 const app = express()
 
-app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
+app.use(morgan((NODE_ENV === 'development') ? 'tiny' : 'common', {
   skip: () => NODE_ENV === 'test'
 }))
 
