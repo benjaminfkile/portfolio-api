@@ -19,18 +19,44 @@ palletteRouter
     .route("/post-pallette")
     .post(jsonParser, async (req, res, next) => {
         const knexInstance = req.app.get("db")
-        const body = JSON.stringify(req.body)
+        let body = req.body
         let id
+        console.log("name:", body.name)
+        console.log("pallette:", body.pallette)
         if (body.pallette && body.name) {
             id = crypto.randomBytes(16).toString('hex')
             body.pallette_id = id
             body.created_date = Date.now()
-            palletteService.postPallette(knexInstance, body).then(() => {
-                res.status(200).send({ message: "pallette posted", id: id })
+            palletteService.postPallette(knexInstance, body).then((pallette) => {
+                res.status(200).send({ message: "pallette posted", id: id, pallette: pallette })
             }).catch(next)
         } else {
-            res.status(400).send({ message: "please add provide a pallette and a name" })
+            res.status(400).send({ message: "please provide a pallette and a name" })
         }
+    })
+
+palletteRouter
+    .route("/set-pallette")
+    .post(jsonParser, async (req, res, next) => {
+        const knexInstance = req.app.get("db")
+        const io = req.app.get("globalIO")
+        const id = req.body.id
+        palletteService.getPalletteById(knexInstance, id).then(pallette => {
+            io.sockets.emit("theme", pallette)
+            res.send(pallette)
+        }).catch(next)
+
+        let message = {
+            PalleteColor1: "#2FF3E0",
+            PalleteColor2: "#F8D210",
+            PalleteColor3: "#FA26A0",
+            PalleteColor4: "#F51720"
+        }
+
+
+
+
+
     })
 
 module.exports = palletteRouter

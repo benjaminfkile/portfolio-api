@@ -1,5 +1,6 @@
 require("dotenv").config()
-const { PORT, NODE_ENV } = require("./config")
+const knex = require("knex")
+const { PORT, NODE_ENV, DATABASE_URL } = require("./config")
 const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
@@ -7,35 +8,35 @@ const helmet = require("helmet")
 const app = express()
 const http = require("http")
 const server = http.createServer(app)
-const io = require('socket.io')(server, { origins: '*:*'});
+const io = require('socket.io')(server, { origins: '*:*' })
+const socketService = require("./SocketService/socket-service")
 const morganOption = (NODE_ENV === "production")
   ? "tiny"
-  : "common";
+  : "common"
+
+const db = knex({
+  client: "pg",
+  connection: DATABASE_URL,
+})
+
+app.set("db", db)
+
+
+const palletteRouter = require("./Routes/PalletteRoutes/pallette-router")
+
+app.set("globalIO", io)
+const globalIO = app.get("globalIO")
+socketService.socketHandler(globalIO)
 
 app.use(morgan(morganOption))
 app.use(cors())
 app.use(helmet())
 
-let message = {
-  PalleteColor1: "#2FF3E0",
-  PalleteColor2: "#F8D210",
-  PalleteColor3: "#FA26A0",
-  PalleteColor4: "#F51720"
-}
+app.get("/", (req, res) => {
+  res.send("Portfolio API")
+})
 
-io.on("connection", (socket) => {
-  socket.emit("theme", message);
-});
-
-io.on("connection", (socket) => {
-  socket.on("theme", (theme) => {
-    io.sockets.emit("theme", theme);
-  });
-});
-
-// app.get("/", (req, res) => {
-//   res.status(200).send({message: message})
-// })
+app.use("/api/pallettes", palletteRouter)
 
 app.use(function errorHandler(error, req, res, next) {
   let response
