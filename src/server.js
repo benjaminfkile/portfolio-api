@@ -29,7 +29,7 @@ io.on("connection", (socket) => {
 
 io.on("connection", (socket) => {
   socket.on("theme", (theme) => {
-    socket.emit("theme", theme);
+    io.sockets.emit("theme", theme);
   });
 });
 
