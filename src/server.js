@@ -1,9 +1,9 @@
 require("dotenv").config()
+const { PORT, NODE_ENV } = require("./config")
 const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
 const helmet = require("helmet")
-const { PORT, NODE_ENV } = require("./config")
 const app = express()
 const http = require("http")
 const server = http.createServer(app)
@@ -27,6 +27,12 @@ io.on("connection", (socket) => {
   socket.emit("theme", message);
 });
 
+io.on("connection", (socket) => {
+  socket.on("theme", (theme) => {
+    socket.emit("theme", theme);
+  });
+});
+
 // app.get("/", (req, res) => {
 //   res.status(200).send({message: message})
 // })
@@ -45,4 +51,3 @@ app.use(function errorHandler(error, req, res, next) {
 server.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`)
 })
-
