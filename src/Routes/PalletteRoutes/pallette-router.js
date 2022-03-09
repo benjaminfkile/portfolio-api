@@ -52,11 +52,6 @@ palletteRouter
             PalleteColor3: "#FA26A0",
             PalleteColor4: "#F51720"
         }
-
-
-
-
-
     })
 
 module.exports = palletteRouter

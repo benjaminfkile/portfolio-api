@@ -23,6 +23,7 @@ app.set("db", db)
 
 
 const palletteRouter = require("./Routes/PalletteRoutes/pallette-router")
+const snackRouter = require("./Routes/SnackRoutes/snack-router")
 
 app.set("globalIO", io)
 const globalIO = app.get("globalIO")
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/pallettes", palletteRouter)
+app.use("/api/snacks", snackRouter)
 
 app.use(function errorHandler(error, req, res, next) {
   let response
