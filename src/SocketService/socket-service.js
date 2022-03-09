@@ -5,12 +5,11 @@ const service = {
         let io = globalIO
 
         let message = {
-            PalleteColor1: "#2FF3E0",
-            PalleteColor2: "#F8D210",
-            PalleteColor3: "#FA26A0",
-            PalleteColor4: "#F51720"
-          }
-
+            PalleteColor1: "#000328",
+            PalleteColor2: "#686868",
+            PalleteColor3: "#494949",
+            PalleteColor4: "#bf811d"
+        }
 
         io.on("connection", (socket) => {
             socket.emit("theme", message)
