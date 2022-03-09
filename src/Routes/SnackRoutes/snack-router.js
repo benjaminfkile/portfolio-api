@@ -6,7 +6,7 @@ snackRouter
     .route("/send-snack")
     .post(jsonParser, async (req, res, next) => {
         const io = req.app.get("globalIO")
-        const snack = req.body.snack
+        const snack = req.body
         io.sockets.emit("snack", snack)
         res.send(snack)
     })
